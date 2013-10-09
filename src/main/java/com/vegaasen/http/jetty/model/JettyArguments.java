@@ -1,6 +1,8 @@
 package com.vegaasen.http.jetty.model;
 
 /**
+ * todo: simplify with objects
+ *
  * @author <a href="vegard.aasen@gmail.com">vegardaasen</a>
  */
 public final class JettyArguments {
@@ -21,6 +23,9 @@ public final class JettyArguments {
     private String protectedPath = DEFAULT_PATH + "*";
     private String unprotectedPaths;
     private String realm = "Jetty Application Server";
+    private int httpPort = DEFAULT_PORT;
+    private int httpControlPort = DEFAULT_CONTROL_PORT;
+    private int httpsPort = DEFAULT_HTTPS_PORT;
 
     public JettyArguments() {
     }
@@ -79,5 +84,37 @@ public final class JettyArguments {
 
     public void setRealm(String realm) {
         this.realm = realm;
+    }
+
+    public String getUnprotectedPaths() {
+        return unprotectedPaths;
+    }
+
+    public void setUnprotectedPaths(String unprotectedPaths) {
+        this.unprotectedPaths = unprotectedPaths;
+    }
+
+    public int getHttpPort() {
+        return httpPort;
+    }
+
+    public void setHttpPort(int httpPort) {
+        this.httpPort = httpPort;
+    }
+
+    public int getHttpControlPort() {
+        return httpControlPort;
+    }
+
+    public void setHttpControlPort(int httpControlPort) {
+        this.httpControlPort = httpControlPort;
+    }
+
+    public int getHttpsPort() {
+        return httpsPort;
+    }
+
+    public void setHttpsPort(int httpsPort) {
+        this.httpsPort = httpsPort;
     }
 }

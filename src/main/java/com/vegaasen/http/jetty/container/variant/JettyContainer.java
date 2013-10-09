@@ -15,8 +15,7 @@ public class JettyContainer extends AbstractContainer implements Serializable {
     private static final Logger LOG = Logger.getLogger(JettyContainer.class.getName());
     private static final long serialVersionUID = 42L;
 
-    private static Server webServer;
-    private static Server controlServer;
+
 
     @Override
     public void startServer() {
