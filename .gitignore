@@ -4,3 +4,10 @@
 *.jar
 *.war
 *.ear
+
+#IDE
+.idea/*
+/.idea
+.idea
+*.iml
+*.ipr
