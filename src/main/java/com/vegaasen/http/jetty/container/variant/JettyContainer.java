@@ -38,13 +38,13 @@ public class JettyContainer extends AbstractContainer implements Serializable {
             webServer.start();
         } catch (Exception e) {
             LOG.severe("Unable to start webserver. Reason: " + e.getMessage());
-        } finally {
             try {
                 webServer.stop();
-            } catch (Exception e) {
-                e.printStackTrace();
+            } catch (Exception ex) {
+                ex.printStackTrace();
             }
             webServer = null;
+            throw new RuntimeException(e);
         }
     }
 

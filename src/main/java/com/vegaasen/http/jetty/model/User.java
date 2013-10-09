@@ -8,9 +8,6 @@ public final class User {
     private String username;
     private String password;
 
-    private User() {
-    }
-
     private User(final Builder builder) {
         this.username = builder.username;
         this.password = builder.password;
