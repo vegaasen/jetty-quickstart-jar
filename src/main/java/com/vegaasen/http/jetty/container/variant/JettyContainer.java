@@ -58,4 +58,8 @@ public class JettyContainer extends AbstractContainer implements Serializable {
 
     }
 
+    @Override
+    public void stop() {
+
+    }
 }

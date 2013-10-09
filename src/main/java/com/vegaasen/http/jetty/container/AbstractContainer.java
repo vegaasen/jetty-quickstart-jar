@@ -17,19 +17,25 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author <a href="vegard.aasen@gmail.com">vegardaasen</a>
  */
 public abstract class AbstractContainer implements Container {
 
+    public static final String COMMAND = "command";
+    public static final String STOP = "stop", KILL = "kill", STATUS = "status";
+
     protected static Server webServer;
     protected static Server controlServer;
 
-    //can be overridden
     public AbstractContainer() {
     }
 
@@ -38,9 +44,10 @@ public abstract class AbstractContainer implements Container {
         throw new IllegalStateException("Not implemented");
     }
 
-    //can be overridden
     public void start(Thread t) {
     }
+
+    public abstract void stop();
 
     @Override
     public boolean isRunning() {
@@ -104,12 +111,46 @@ public abstract class AbstractContainer implements Container {
         @Override
         protected void doGet(final HttpServletRequest req, final HttpServletResponse resp)
                 throws ServletException, IOException {
+            PrintWriter out = resp.getWriter();
+            resp.setContentType("text/html");
             try {
-
+                final String command = req.getParameter(COMMAND);
+                if (command == null || command.isEmpty()) {
+                    out.print(String.format("Command only accepts {%s, %s, %s}", STOP, KILL, STATUS));
+                    return;
+                }
+                if (command.equals(STOP)) {
+                    out.print("Stopping servlet container in a few seconds.");
+                    stopServer(false);
+                } else if (command.equals(KILL)) {
+                    out.print("Killing servlet container now.");
+                    stopServer(true);
+                } else if (command.equals(STATUS)) {
+                    out.print("Server is running just fine.");
+                } else {
+                    out.print(String.format("Command detected, but only accepts the following: {%s, %s, %s}", STOP, KILL, STATUS));
+                }
             } catch (Exception e) {
-
+                out.print(String.format("Unable to complete request because of: {%s}", e.getMessage()));
             }
         }
+
+        private void stopServer(final boolean justDie) {
+            final long timeToServerDeath = (justDie) ? 0L : TimeUnit.SECONDS.toMillis(2);
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    stop();
+                    try {
+                        Thread.sleep(timeToServerDeath);
+                    } catch (Exception e) {
+                        //eating the exception for now.
+                    }
+                    System.exit(0);
+                }
+            }, timeToServerDeath);
+        }
+
     }
 
 }
