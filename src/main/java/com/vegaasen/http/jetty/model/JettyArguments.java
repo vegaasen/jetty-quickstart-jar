@@ -10,6 +10,7 @@ public final class JettyArguments {
     public static final String[] JETTY_USER_ROLES = new String[]{"user"};
     public static final String[] JETTY_PROTOCOLS = new String[]{"http/1.1"};
     public static final String DEFAULT_PATH = "/";
+    public static final String DEFAULT_WEBAPP_RESOURCE = "/webapp/";
     public static final int DEFAULT_PORT = 7000;
     public static final int DEFAULT_CONTROL_PORT = DEFAULT_PORT + 1;
     public static final int DEFAULT_HTTPS_PORT = DEFAULT_PORT + 443;
@@ -18,6 +19,7 @@ public final class JettyArguments {
     private String[] protocols = JETTY_PROTOCOLS;
     private String root = DEFAULT_PATH;
     private String controlRoot = DEFAULT_PATH;
+    private String contextPath = DEFAULT_PATH + "jetty";
     private User[] allowedUsers = new User[]{DEFAULT_USER};
     private String[] userRoles = JETTY_USER_ROLES;
     private String protectedPath = DEFAULT_PATH + "*";
@@ -26,6 +28,7 @@ public final class JettyArguments {
     private int httpPort = DEFAULT_PORT;
     private int httpControlPort = DEFAULT_CONTROL_PORT;
     private int httpsPort = DEFAULT_HTTPS_PORT;
+    private String webAppFolder = DEFAULT_WEBAPP_RESOURCE;
 
     public JettyArguments() {
     }
@@ -116,5 +119,21 @@ public final class JettyArguments {
 
     public void setHttpsPort(int httpsPort) {
         this.httpsPort = httpsPort;
+    }
+
+    public String getContextPath() {
+        return contextPath;
+    }
+
+    public void setContextPath(String contextPath) {
+        this.contextPath = contextPath;
+    }
+
+    public String getWebAppFolder() {
+        return webAppFolder;
+    }
+
+    public void setWebAppFolder(String webAppFolder) {
+        this.webAppFolder = webAppFolder;
     }
 }

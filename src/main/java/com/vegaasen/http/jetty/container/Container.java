@@ -1,5 +1,6 @@
 package com.vegaasen.http.jetty.container;
 
+import com.vegaasen.http.jetty.model.JettyArguments;
 import org.eclipse.jetty.server.Server;
 
 import javax.servlet.http.HttpServlet;
@@ -13,7 +14,7 @@ interface Container {
 
     public void startServer();
 
-    public void startServer(String[] args);
+    public void startServer(JettyArguments args);
 
     public void stopServer();
 

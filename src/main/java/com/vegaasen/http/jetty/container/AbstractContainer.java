@@ -12,6 +12,12 @@ import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.security.Credential;
 import org.eclipse.jetty.webapp.WebAppContext;
 
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -86,6 +92,24 @@ public abstract class AbstractContainer implements Container {
         securityHandler.addConstraintMapping(basicAuthMapping);
 
         context.setHandler(securityHandler);
+    }
+
+    public final class ControlServlet extends HttpServlet implements Serializable {
+
+        private static final long serialVersionUID = 42L;
+
+        public ControlServlet() {
+        }
+
+        @Override
+        protected void doGet(final HttpServletRequest req, final HttpServletResponse resp)
+                throws ServletException, IOException {
+            try {
+
+            } catch (Exception e) {
+
+            }
+        }
     }
 
 }
