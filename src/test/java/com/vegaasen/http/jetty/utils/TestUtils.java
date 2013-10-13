@@ -2,10 +2,7 @@ package com.vegaasen.http.jetty.utils;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.DatagramSocket;
-import java.net.HttpURLConnection;
-import java.net.ServerSocket;
-import java.net.URL;
+import java.net.*;
 
 /**
  * @author <a href="vegard.aasen@gmail.com">vegardaasen</a>
@@ -34,6 +31,20 @@ public final class TestUtils {
         ds = new DatagramSocket(port);
         ds.setReuseAddress(true);
         return true;
+    }
+
+    public static InputStream streamFromProtectedHttpPort(
+            final int port,
+            String path,
+            final String username,
+            final String password
+    ) throws IOException {
+        Authenticator.setDefault(new PwdAuthenticator(username, password));
+        HttpURLConnection connection = getConnection(port, path);
+        if (connection != null) {
+            return connection.getInputStream();
+        }
+        throw new IllegalArgumentException("Shit happened");
     }
 
     public static InputStream streamFromHttpPort(final int port, String path) throws IOException {
@@ -67,6 +78,21 @@ public final class TestUtils {
         URL u = new URL(String.format("http://127.0.0.1:%s%s", port, path));
         HttpURLConnection connection = (HttpURLConnection) u.openConnection();
         return connection;
+    }
+
+    static class PwdAuthenticator extends Authenticator {
+
+        private String user;
+        private String password;
+
+        PwdAuthenticator(String user, String password) {
+            this.user = user;
+            this.password = password;
+        }
+
+        public PasswordAuthentication getPasswordAuthentication() {
+            return (new PasswordAuthentication(user, password.toCharArray()));
+        }
     }
 
 }

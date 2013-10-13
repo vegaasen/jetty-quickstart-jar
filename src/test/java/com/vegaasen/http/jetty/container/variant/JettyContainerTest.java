@@ -16,7 +16,7 @@ import static org.junit.Assert.*;
 /**
  * @author <a href="vegard.aasen@gmail.com">vegardaasen</a>
  */
-public class JettyContainerTest {
+public final class JettyContainerTest {
 
     private static final String TEXT_FROM_HTML = "Ello!:)";
     private static final String RESOURCE_WITHOUT_CONTEXT_PATH = "/html/resource.html";
@@ -149,11 +149,12 @@ public class JettyContainerTest {
 
     @Test
     public void shouldConfigureProtectedArea() throws IOException {
+        final String username = "vegard", password = "vegard";
         arguments.setContextPath("/");
         Authentication authentication = new Authentication();
         authentication.setRealm("Jetty Test Realm");
         authentication.setUserRoles(ContainerProperties.JETTY_USER_ROLES);
-        authentication.setAllowedUsers(new User[]{new User.Builder().password("vegard").username("vegard").build()});
+        authentication.setAllowedUsers(new User[]{new User.Builder().password(password).username(username).build()});
         authentication.setProtectedPath("/protected-area/");
         arguments.setAuthentication(authentication);
         jettyContainer.startServer(arguments);
@@ -165,11 +166,23 @@ public class JettyContainerTest {
                 "/jetty.html"));
         assertNotNull(stream);
         assertFalse(stream.isEmpty());
-        stream = TestUtils.stringFromInputStream(TestUtils.streamFromHttpPort(
+        try {
+            TestUtils.stringFromInputStream(TestUtils.streamFromHttpPort(
+                    ContainerProperties.DEFAULT_PORT,
+                    "/protected-area/protected-resource.html"));
+            fail("Should not get here.");
+        } catch (Exception e) {
+            assertTrue(e.getMessage().contains("401"));
+            assertTrue(true);
+        }
+        stream = TestUtils.stringFromInputStream(TestUtils.streamFromProtectedHttpPort(
                 ContainerProperties.DEFAULT_PORT,
-                "/protected-area/protected-resource.html"));
+                "/protected-area/protected-resource.html",
+                username,
+                password
+        ));
         assertNotNull(stream);
-        assertTrue(stream.isEmpty());
+        assertFalse(stream.isEmpty());
     }
 
     @After

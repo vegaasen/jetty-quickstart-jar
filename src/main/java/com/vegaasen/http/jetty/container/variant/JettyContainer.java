@@ -55,7 +55,10 @@ public final class JettyContainer extends AbstractContainer implements Serializa
                 }
             }
             ConstraintSecurityHandler basicAuth = conditionallyAddBasicAuthentication(args);
-            args.addHandler(basicAuth);
+            if (basicAuth != null) {
+                LOG.info(String.format("Configured basic authentication : {%s}", args.getAuthentication().toString()));
+                webAppContext.setSecurityHandler(basicAuth);
+            }
             args.addHandler(webAppContext);
             webServer.setHandler(assembleHandlers(args.getHandlers().toArray(new Handler[args.getHandlers().size()])));
             webServer.start();

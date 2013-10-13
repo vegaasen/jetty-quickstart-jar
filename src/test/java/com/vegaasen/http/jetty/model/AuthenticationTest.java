@@ -9,7 +9,7 @@ import static org.junit.Assert.assertTrue;
 /**
  * @author <a href="vegard.aasen@gmail.com">vegardaasen</a>
  */
-public class AuthenticationTest {
+public final class AuthenticationTest {
 
     @Test
     public void shouldSuccessfullyAddStar() {

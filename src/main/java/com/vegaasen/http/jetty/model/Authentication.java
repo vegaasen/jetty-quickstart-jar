@@ -1,5 +1,7 @@
 package com.vegaasen.http.jetty.model;
 
+import java.util.Arrays;
+
 import static com.vegaasen.http.jetty.container.ContainerProperties.*;
 
 /**
@@ -60,5 +62,16 @@ public final class Authentication {
 
     public void setUserRoles(String[] userRoles) {
         this.userRoles = userRoles;
+    }
+
+    @Override
+    public String toString() {
+        return "Authentication{" +
+                "realm='" + realm + '\'' +
+                ", unprotectedPaths='" + unprotectedPaths + '\'' +
+                ", protectedPath='" + protectedPath + '\'' +
+                ", allowedUsers=" + Arrays.toString(allowedUsers) +
+                ", userRoles=" + Arrays.toString(userRoles) +
+                '}';
     }
 }

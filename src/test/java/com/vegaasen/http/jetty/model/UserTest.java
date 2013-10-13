@@ -8,7 +8,7 @@ import static org.junit.Assert.*;
 /**
  * @author <a href="vegard.aasen@gmail.com">vegardaasen</a>
  */
-public class UserTest {
+public final class UserTest {
 
     private String userName;
     private String password;
