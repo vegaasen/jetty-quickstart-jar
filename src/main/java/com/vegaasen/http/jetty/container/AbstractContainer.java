@@ -1,16 +1,19 @@
 package com.vegaasen.http.jetty.container;
 
+import com.vegaasen.http.jetty.container.servlet.IControlServlet;
 import com.vegaasen.http.jetty.model.JettyArguments;
 import com.vegaasen.http.jetty.model.User;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
+import org.eclipse.jetty.security.authentication.BasicAuthenticator;
 import org.eclipse.jetty.server.Connector;
+import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.security.Credential;
-import org.eclipse.jetty.webapp.WebAppContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -44,8 +47,7 @@ public abstract class AbstractContainer implements Container {
         throw new IllegalStateException("Not implemented");
     }
 
-    public void start(Thread t) {
-    }
+    public abstract void start();
 
     public abstract void stop();
 
@@ -64,7 +66,7 @@ public abstract class AbstractContainer implements Container {
             httpConnector.setPort(args.getHttpPort());
             connectors.add(httpConnector);
         }
-        if (args.getHttpsPort() > 0) {
+        if (args.getHttpsConfiguration() != null && args.getHttpsConfiguration().getHttpsPort() > 0) {
             //todo
         }
         if (connectors.isEmpty()) {
@@ -73,35 +75,58 @@ public abstract class AbstractContainer implements Container {
         return connectors.toArray(new Connector[connectors.size()]);
     }
 
-    protected void assembleBasicAuthentication(final WebAppContext context, final JettyArguments args) {
-        if (context == null) {
-            return;
-        }
+    protected ConstraintSecurityHandler conditionallyAddBasicAuthentication(final JettyArguments args) {
         if (args == null) {
-            return;
+            return null;
         }
+        if (args.getAuthentication() == null) {
+            return null;
+        }
+
+        final HashLoginService loginService = new HashLoginService();
+        loginService.setName(args.getAuthentication().getRealm());
+        for (User user : args.getAuthentication().getAllowedUsers()) {
+            loginService.putUser(
+                    user.getUsername(),
+                    Credential.getCredential(user.getPassword()),
+                    args.getAuthentication().getUserRoles()
+            );
+        }
+
         final Constraint constraint = new Constraint();
         constraint.setName(Constraint.__BASIC_AUTH);
-        constraint.setRoles(args.getUserRoles());
+        constraint.setRoles(args.getAuthentication().getUserRoles());
         constraint.setAuthenticate(true);
 
-        final ConstraintMapping basicAuthMapping = new ConstraintMapping();
-        basicAuthMapping.setConstraint(constraint);
-        basicAuthMapping.setPathSpec(args.getProtectedPath());
+        final ConstraintMapping constraintMapping = new ConstraintMapping();
+        constraintMapping.setConstraint(constraint);
+        constraintMapping.setPathSpec(args.getAuthentication().getProtectedPath());
 
-        final HashLoginService loginService = new HashLoginService(args.getRealm());
-        for (User user : args.getAllowedUsers()) {
-            loginService.putUser(user.getUsername(), Credential.getCredential(user.getPassword()), args.getUserRoles());
-        }
+
         final ConstraintSecurityHandler securityHandler = new ConstraintSecurityHandler();
+        securityHandler.setRealmName(args.getAuthentication().getRealm());
+        securityHandler.setAuthenticator(new BasicAuthenticator());
+        securityHandler.addConstraintMapping(constraintMapping);
         securityHandler.setLoginService(loginService);
 
-        securityHandler.addConstraintMapping(basicAuthMapping);
-
-        context.setHandler(securityHandler);
+        return securityHandler;
     }
 
-    public final class ControlServlet extends HttpServlet implements Serializable {
+    public HandlerCollection assembleHandlers(final Handler... handlers) {
+        if (handlers == null || handlers.length == 0) {
+            throw new IllegalArgumentException("No handlers were found, even though there was expected to " +
+                    "be at least one present.");
+        }
+        final HandlerCollection collection = new HandlerCollection();
+        for (Handler h : handlers) {
+            if (h != null) {
+                collection.addHandler(h);
+            }
+        }
+        return collection;
+    }
+
+    public final class ControlServlet extends HttpServlet implements IControlServlet, Serializable {
 
         private static final long serialVersionUID = 42L;
 
@@ -135,7 +160,7 @@ public abstract class AbstractContainer implements Container {
             }
         }
 
-        private void stopServer(final boolean justDie) {
+        public void stopServer(final boolean justDie) {
             final long timeToServerDeath = (justDie) ? 0L : TimeUnit.SECONDS.toMillis(2);
             new Timer().schedule(new TimerTask() {
                 @Override
@@ -143,7 +168,7 @@ public abstract class AbstractContainer implements Container {
                     stop();
                     try {
                         Thread.sleep(timeToServerDeath);
-                    } catch (Exception e) {
+                    } catch (final Exception e) {
                         //eating the exception for now.
                     }
                     System.exit(0);

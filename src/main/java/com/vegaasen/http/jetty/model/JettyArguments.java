@@ -1,34 +1,26 @@
 package com.vegaasen.http.jetty.model;
 
+import org.eclipse.jetty.server.Handler;
+
+import java.util.*;
+
+import static com.vegaasen.http.jetty.container.ContainerProperties.*;
+
 /**
- * todo: simplify with objects
- *
  * @author <a href="vegard.aasen@gmail.com">vegardaasen</a>
  */
 public final class JettyArguments {
 
-    public static final String[] JETTY_USER_ROLES = new String[]{"user"};
-    public static final String[] JETTY_PROTOCOLS = new String[]{"http/1.1"};
-    public static final String DEFAULT_PATH = "/";
-    public static final String DEFAULT_WEBAPP_RESOURCE = "/webapp/";
-    public static final int DEFAULT_PORT = 7000;
-    public static final int DEFAULT_CONTROL_PORT = DEFAULT_PORT + 1;
-    public static final int DEFAULT_HTTPS_PORT = DEFAULT_PORT + 443;
-    public static final User DEFAULT_USER = new User.Builder().username("user").password("password").build();
-
     private String[] protocols = JETTY_PROTOCOLS;
-    private String root = DEFAULT_PATH;
+    private String rootPath = DEFAULT_PATH;
     private String controlRoot = DEFAULT_PATH;
-    private String contextPath = DEFAULT_PATH + "jetty";
-    private User[] allowedUsers = new User[]{DEFAULT_USER};
-    private String[] userRoles = JETTY_USER_ROLES;
-    private String protectedPath = DEFAULT_PATH + "*";
-    private String unprotectedPaths;
-    private String realm = "Jetty Application Server";
+    private String contextPath = DEFAULT_CONTEXT_PATH;
     private int httpPort = DEFAULT_PORT;
-    private int httpControlPort = DEFAULT_CONTROL_PORT;
-    private int httpsPort = DEFAULT_HTTPS_PORT;
-    private String webAppFolder = DEFAULT_WEBAPP_RESOURCE;
+    private String webAppResourceFolder = DEFAULT_WEBAPP_RESOURCE;
+    private HttpsConfiguration httpsConfiguration;
+    private Authentication authentication;
+    private Map<String, String> initProperties = new HashMap<String, String>();
+    private List<Handler> handlers = new ArrayList<Handler>();
 
     public JettyArguments() {
     }
@@ -41,12 +33,12 @@ public final class JettyArguments {
         this.protocols = protocols;
     }
 
-    public String getRoot() {
-        return root;
+    public String getRootPath() {
+        return rootPath;
     }
 
-    public void setRoot(String root) {
-        this.root = root;
+    public void setRootPath(String rootPath) {
+        this.rootPath = rootPath;
     }
 
     public String getControlRoot() {
@@ -57,68 +49,12 @@ public final class JettyArguments {
         this.controlRoot = controlRoot;
     }
 
-    public User[] getAllowedUsers() {
-        return allowedUsers;
-    }
-
-    public void setAllowedUsers(User[] allowedUsers) {
-        this.allowedUsers = allowedUsers;
-    }
-
-    public String[] getUserRoles() {
-        return userRoles;
-    }
-
-    public void setUserRoles(String[] userRoles) {
-        this.userRoles = userRoles;
-    }
-
-    public String getProtectedPath() {
-        return protectedPath;
-    }
-
-    public void setProtectedPath(String protectedPath) {
-        this.protectedPath = protectedPath;
-    }
-
-    public String getRealm() {
-        return realm;
-    }
-
-    public void setRealm(String realm) {
-        this.realm = realm;
-    }
-
-    public String getUnprotectedPaths() {
-        return unprotectedPaths;
-    }
-
-    public void setUnprotectedPaths(String unprotectedPaths) {
-        this.unprotectedPaths = unprotectedPaths;
-    }
-
     public int getHttpPort() {
         return httpPort;
     }
 
     public void setHttpPort(int httpPort) {
         this.httpPort = httpPort;
-    }
-
-    public int getHttpControlPort() {
-        return httpControlPort;
-    }
-
-    public void setHttpControlPort(int httpControlPort) {
-        this.httpControlPort = httpControlPort;
-    }
-
-    public int getHttpsPort() {
-        return httpsPort;
-    }
-
-    public void setHttpsPort(int httpsPort) {
-        this.httpsPort = httpsPort;
     }
 
     public String getContextPath() {
@@ -129,11 +65,69 @@ public final class JettyArguments {
         this.contextPath = contextPath;
     }
 
-    public String getWebAppFolder() {
-        return webAppFolder;
+    public String getWebAppResourceFolder() {
+        return webAppResourceFolder;
     }
 
-    public void setWebAppFolder(String webAppFolder) {
-        this.webAppFolder = webAppFolder;
+    public void setWebAppResourceFolder(String webAppResourceFolder) {
+        this.webAppResourceFolder = webAppResourceFolder;
+    }
+
+    public HttpsConfiguration getHttpsConfiguration() {
+        return httpsConfiguration;
+    }
+
+    public void setHttpsConfiguration(HttpsConfiguration httpsConfiguration) {
+        this.httpsConfiguration = httpsConfiguration;
+    }
+
+    public Authentication getAuthentication() {
+        return authentication;
+    }
+
+    public void setAuthentication(Authentication authentication) {
+        this.authentication = authentication;
+    }
+
+    public Map<String, String> getInitProperties() {
+        return initProperties;
+    }
+
+    public void addInitProperty(String propertyKey, String propertyValue) {
+        initProperties.put(propertyKey, propertyValue);
+    }
+
+    public boolean hasProperties() {
+        return initProperties != null && !initProperties.isEmpty();
+    }
+
+    public List<Handler> getHandlers() {
+        return handlers;
+    }
+
+    public void addHandler(final Handler handler) {
+        handlers.add(handler);
+    }
+
+    public String printRequestableUrls() {
+        StringBuilder builder = new StringBuilder();
+        builder.append("http://localhost:").append(getHttpPort()).append(getContextPath());
+        if (getHttpsConfiguration() != null) {
+            builder.append("\nhttps://localhost:").append(getHttpsConfiguration().getHttpsPort()).append(getContextPath());
+        }
+        return builder.toString();
+    }
+
+    @Override
+    public String toString() {
+        return "JettyArguments{" +
+                "protocols=" + Arrays.toString(protocols) +
+                ", rootPath='" + rootPath + '\'' +
+                ", controlRoot='" + controlRoot + '\'' +
+                ", contextPath='" + contextPath + '\'' +
+                ", httpPort=" + httpPort +
+                ", webAppResourceFolder='" + webAppResourceFolder + '\'' +
+                ", httpsConfiguration=" + httpsConfiguration +
+                '}';
     }
 }

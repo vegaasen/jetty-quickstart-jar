@@ -15,16 +15,19 @@
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-server</artifactId>
             <version>${jetty.version}</version>
+            <scope>${default.scope}</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-webapp</artifactId>
             <version>${jetty.version}</version>
+            <scope>${default.scope}</scope>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jetty</groupId>
             <artifactId>jetty-annotations</artifactId>
             <version>${jetty.version}</version>
+            <scope>${default.scope}</scope>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -44,6 +47,7 @@
 
     <properties>
         <jetty.version>9.0.6.v20130930</jetty.version>
+        <default.scope>provided</default.scope>
     </properties>
     
 </project>
