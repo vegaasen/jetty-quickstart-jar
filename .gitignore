@@ -1,6 +1,9 @@
+# Generated stuff
 *.class
+target/*
+/target/*
 
-# Package Files #
+# Package Files
 *.jar
 *.war
 *.ear
