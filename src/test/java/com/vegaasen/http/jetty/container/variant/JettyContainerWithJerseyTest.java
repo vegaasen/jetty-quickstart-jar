@@ -6,7 +6,6 @@ import com.vegaasen.http.jetty.jersey.rest.controller.TestController;
 import com.vegaasen.http.jetty.jersey.rest.storage.SimpleStorage;
 import com.vegaasen.http.jetty.model.JettyArguments;
 import com.vegaasen.http.jetty.utils.TestUtils;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -28,6 +27,7 @@ public final class JettyContainerWithJerseyTest extends JettyContainerAbstractTe
         arguments.setContextPath("/");
         arguments.setRootPath("/");
         jettyContainer = new JettyContainer();
+        SimpleStorage.INSTANCE.clearAllThings();
     }
 
     @Test
@@ -110,11 +110,6 @@ public final class JettyContainerWithJerseyTest extends JettyContainerAbstractTe
         assertTrue(result.contains("things"));
         assertTrue(result.contains("id"));
         assertTrue(result.contains("name"));
-    }
-
-    @After
-    public void tearDown() {
-        SimpleStorage.INSTANCE.clearAllThings();
     }
 
 }
