@@ -1,5 +1,6 @@
 package com.vegaasen.http.jetty.utils;
 
+import com.vegaasen.http.jetty.model.Authentication;
 import com.vegaasen.http.jetty.model.JettyArguments;
 
 /**
@@ -12,7 +13,10 @@ public final class Validator {
 
     public static void assertValidBasicArguments(final JettyArguments arguments) {
         if (arguments != null) {
-            if (arguments.getContextPath() == null || arguments.getHttpPort() <= 0 || arguments.getRootPath() == null || arguments.getWebAppResourceFolder() == null) {
+            if (arguments.getContextPath() == null ||
+                    arguments.getHttpPort() <= 0 ||
+                    arguments.getRootPath() == null ||
+                    arguments.getWebAppResourceFolder() == null) {
                 throw new IllegalArgumentException(String.format("Illegal arguments provided. Object: {%s}", arguments.toString()));
             }
             return;
@@ -25,6 +29,20 @@ public final class Validator {
         resourcePath = (resourcePath.startsWith("/") ? resourcePath : "/" + resourcePath);
         if (Validator.class.getResource(resourcePath) == null) {
             throw new IllegalArgumentException("Resource-folder does not exists.");
+        }
+    }
+
+    public static void assertBasicAuthenticationArguments(final Authentication authentication) {
+        if (authentication != null) {
+            if (authentication.getProtectedPath() == null ||
+                    authentication.getUserRoles() == null ||
+                    authentication.getUserRoles().length == 0 ||
+                    authentication.getAllowedUsers() == null ||
+                    authentication.getAllowedUsers().length == 0) {
+                throw new IllegalArgumentException(String.format(
+                        "Illegal arguments provided. Object: {%s}",
+                        authentication.toString()));
+            }
         }
     }
 

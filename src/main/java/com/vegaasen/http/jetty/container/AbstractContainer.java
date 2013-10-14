@@ -3,6 +3,7 @@ package com.vegaasen.http.jetty.container;
 import com.vegaasen.http.jetty.container.servlet.IControlServlet;
 import com.vegaasen.http.jetty.model.JettyArguments;
 import com.vegaasen.http.jetty.model.User;
+import com.vegaasen.http.jetty.utils.Validator;
 import org.eclipse.jetty.security.ConstraintMapping;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.security.HashLoginService;
@@ -82,7 +83,7 @@ public abstract class AbstractContainer implements Container {
         if (args.getAuthentication() == null) {
             return null;
         }
-
+        Validator.assertBasicAuthenticationArguments(args.getAuthentication());
         final HashLoginService loginService = new HashLoginService();
         loginService.setName(args.getAuthentication().getRealm());
         for (User user : args.getAuthentication().getAllowedUsers()) {

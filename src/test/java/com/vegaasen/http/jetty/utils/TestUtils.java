@@ -47,12 +47,21 @@ public final class TestUtils {
         throw new IllegalArgumentException("Shit happened");
     }
 
-    public static InputStream streamFromHttpPort(final int port, String path) throws IOException {
+    public static InputStream streamFromHttpPort(final int port, final String path) throws IOException {
         return streamFromHttpPort(port, path, false);
     }
 
-    public static InputStream streamFromHttpPort(final int port, String path, final boolean errorStream) throws IOException {
+    public static InputStream streamFromHttpPort(final int port, String path, final boolean errorStream)
+            throws IOException {
+        return streamFromHttpPort(port, path, errorStream, false);
+    }
+
+    public static InputStream streamFromHttpPort(final int port, String path, final boolean errorStream, final boolean usePost)
+            throws IOException {
         HttpURLConnection connection = getConnection(port, path);
+        if (usePost) {
+            connection.setRequestMethod("POST");
+        }
         if (connection != null) {
             if (errorStream) {
                 return connection.getErrorStream();

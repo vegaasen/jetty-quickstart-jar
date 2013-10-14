@@ -1,11 +1,11 @@
 package com.vegaasen.http.jetty.container.variant;
 
 import com.vegaasen.http.jetty.container.ContainerProperties;
+import com.vegaasen.http.jetty.container.variant.abs.JettyContainerAbstractTest;
 import com.vegaasen.http.jetty.model.Authentication;
 import com.vegaasen.http.jetty.model.JettyArguments;
 import com.vegaasen.http.jetty.model.User;
 import com.vegaasen.http.jetty.utils.TestUtils;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -16,14 +16,13 @@ import static org.junit.Assert.*;
 /**
  * @author <a href="vegard.aasen@gmail.com">vegardaasen</a>
  */
-public final class JettyContainerTest {
+public final class JettyContainerTest extends JettyContainerAbstractTest {
 
     private static final String TEXT_FROM_HTML = "Ello!:)";
     private static final String RESOURCE_WITHOUT_CONTEXT_PATH = "/html/resource.html";
     private static final String RESOURCE_WITH_DEFAULT_CONTEXT_PATH = "/jetty" + RESOURCE_WITHOUT_CONTEXT_PATH;
 
     private JettyArguments arguments;
-    private JettyContainer jettyContainer;
 
     @Before
     public void setUp() throws Exception {
@@ -185,9 +184,34 @@ public final class JettyContainerTest {
         assertFalse(stream.isEmpty());
     }
 
-    @After
-    public void tearDown() throws Exception {
-        jettyContainer.stopServer();
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldFailIllegalPortDefined() {
+        arguments.setHttpPort(0);
+        jettyContainer.startServer(arguments);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldFailIllegalNegativePortDefined() {
+        arguments.setHttpPort(-1230);
+        jettyContainer.startServer(arguments);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldFailContextPathIsNull() {
+        arguments.setContextPath(null);
+        jettyContainer.startServer(arguments);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldFailWebRootIsNull() {
+        arguments.setWebAppResourceFolder(null);
+        jettyContainer.startServer(arguments);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void shouldFailRootIsNull() {
+        arguments.setRootPath(null);
+        jettyContainer.startServer(arguments);
     }
 
 }
