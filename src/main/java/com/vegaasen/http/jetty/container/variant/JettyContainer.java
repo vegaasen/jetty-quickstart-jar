@@ -1,7 +1,7 @@
 package com.vegaasen.http.jetty.container.variant;
 
-import com.vegaasen.http.jetty.container.AbstractContainer;
-import com.vegaasen.http.jetty.container.ContainerProperties;
+import com.vegaasen.http.jetty.container.ContainerDefaults;
+import com.vegaasen.http.jetty.container.abs.AbstractContainer;
 import com.vegaasen.http.jetty.model.JettyArguments;
 import com.vegaasen.http.jetty.utils.Validator;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
@@ -76,11 +76,16 @@ public final class JettyContainer extends AbstractContainer implements Serializa
                 for (ServletHolder servlet : args.getServlets()) {
                     webAppContext.addServlet(
                             servlet,
-                            (args.getContextPath().endsWith(Character.toString(ContainerProperties.SERVLET_MATCHER)) ?
+                            (args.getContextPath().endsWith(Character.toString(ContainerDefaults.SERVLET_MATCHER)) ?
                                     args.getContextPath() :
-                                    args.getContextPath() + ContainerProperties.SERVLET_MATCHER)
+                                    args.getContextPath() + ContainerDefaults.SERVLET_MATCHER)
                     );
                 }
+            }
+            if(args.getControlServlet()!=null) {
+                startControlServer(args);
+            }else{
+                LOG.warning("No control servlet detected. Might be that stuff will not be able to be killed correctly.");
             }
             webServer.setHandler(assembleHandlers(args.getHandlers().toArray(new Handler[args.getHandlers().size()])));
             webServer.start();
@@ -99,7 +104,7 @@ public final class JettyContainer extends AbstractContainer implements Serializa
 
     @Override
     public void stop() {
-
+        stopServer();
     }
 
     @Override

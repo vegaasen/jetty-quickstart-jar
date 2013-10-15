@@ -1,6 +1,6 @@
 package com.vegaasen.http.jetty.run;
 
-import com.vegaasen.http.jetty.container.ContainerProperties;
+import com.vegaasen.http.jetty.container.ContainerDefaults;
 import com.vegaasen.http.jetty.container.variant.JettyContainer;
 import com.vegaasen.http.jetty.model.Authentication;
 import com.vegaasen.http.jetty.model.JettyArguments;
@@ -9,15 +9,13 @@ import com.vegaasen.http.jetty.utils.TestUtils;
 import org.springframework.web.context.ContextLoaderListener;
 import org.springframework.web.context.request.RequestContextListener;
 
-import javax.servlet.ServletRequestListener;
-
 /**
  * @author <a href="vegard.aasen@gmail.com">vegardaasen</a>
  */
 public final class RunnableJetty {
 
     public static void main(String... args) {
-        wicket();
+        jersey();
     }
 
     private static void wicket() {
@@ -57,7 +55,7 @@ public final class RunnableJetty {
 
         Authentication authentication = new Authentication();
         authentication.setRealm("Jetty Test Realm");
-        authentication.setUserRoles(ContainerProperties.JETTY_USER_ROLES);
+        authentication.setUserRoles(ContainerDefaults.JETTY_USER_ROLES);
         authentication.setAllowedUsers(new User[]{new User.Builder().password("vegard").username("vegard").build()});
         authentication.setProtectedPath("/protected-area/");
 

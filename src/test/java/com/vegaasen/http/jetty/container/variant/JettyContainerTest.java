@@ -1,6 +1,6 @@
 package com.vegaasen.http.jetty.container.variant;
 
-import com.vegaasen.http.jetty.container.ContainerProperties;
+import com.vegaasen.http.jetty.container.ContainerDefaults;
 import com.vegaasen.http.jetty.container.variant.abs.JettyContainerAbstractTest;
 import com.vegaasen.http.jetty.model.Authentication;
 import com.vegaasen.http.jetty.model.JettyArguments;
@@ -110,7 +110,7 @@ public final class JettyContainerTest extends JettyContainerAbstractTest {
         assertNotNull(running);
         assertTrue(running);
         String stream = TestUtils.stringFromInputStream(TestUtils.streamFromHttpPort(
-                ContainerProperties.DEFAULT_PORT,
+                ContainerDefaults.DEFAULT_PORT,
                 RESOURCE_WITH_DEFAULT_CONTEXT_PATH));
         assertNotNull(stream);
         assertFalse(stream.isEmpty());
@@ -125,7 +125,7 @@ public final class JettyContainerTest extends JettyContainerAbstractTest {
         assertNotNull(running);
         assertTrue(running);
         stream = TestUtils.stringFromInputStream(TestUtils.streamFromHttpPort(
-                ContainerProperties.DEFAULT_PORT,
+                ContainerDefaults.DEFAULT_PORT,
                 RESOURCE_WITHOUT_CONTEXT_PATH));
         assertNotNull(stream);
         assertFalse(stream.isEmpty());
@@ -140,7 +140,7 @@ public final class JettyContainerTest extends JettyContainerAbstractTest {
         assertNotNull(running);
         assertTrue(running);
         String stream = TestUtils.stringFromInputStream(TestUtils.streamFromHttpPort(
-                ContainerProperties.DEFAULT_PORT,
+                ContainerDefaults.DEFAULT_PORT,
                 "/non/existing/path/index.html", true));
         assertNotNull(stream);
         assertTrue(stream.isEmpty());
@@ -152,7 +152,7 @@ public final class JettyContainerTest extends JettyContainerAbstractTest {
         arguments.setContextPath("/");
         Authentication authentication = new Authentication();
         authentication.setRealm("Jetty Test Realm");
-        authentication.setUserRoles(ContainerProperties.JETTY_USER_ROLES);
+        authentication.setUserRoles(ContainerDefaults.JETTY_USER_ROLES);
         authentication.setAllowedUsers(new User[]{new User.Builder().password(password).username(username).build()});
         authentication.setProtectedPath("/protected-area/");
         arguments.setAuthentication(authentication);
@@ -161,13 +161,13 @@ public final class JettyContainerTest extends JettyContainerAbstractTest {
         assertNotNull(running);
         assertTrue(running);
         String stream = TestUtils.stringFromInputStream(TestUtils.streamFromHttpPort(
-                ContainerProperties.DEFAULT_PORT,
+                ContainerDefaults.DEFAULT_PORT,
                 "/jetty.html"));
         assertNotNull(stream);
         assertFalse(stream.isEmpty());
         try {
             TestUtils.stringFromInputStream(TestUtils.streamFromHttpPort(
-                    ContainerProperties.DEFAULT_PORT,
+                    ContainerDefaults.DEFAULT_PORT,
                     "/protected-area/protected-resource.html"));
             fail("Should not get here.");
         } catch (Exception e) {
@@ -175,7 +175,7 @@ public final class JettyContainerTest extends JettyContainerAbstractTest {
             assertTrue(true);
         }
         stream = TestUtils.stringFromInputStream(TestUtils.streamFromProtectedHttpPort(
-                ContainerProperties.DEFAULT_PORT,
+                ContainerDefaults.DEFAULT_PORT,
                 "/protected-area/protected-resource.html",
                 username,
                 password

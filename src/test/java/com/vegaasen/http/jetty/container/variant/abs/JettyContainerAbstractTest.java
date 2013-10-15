@@ -25,4 +25,10 @@ public abstract class JettyContainerAbstractTest {
         assertTrue(running);
     }
 
+    protected void assertControlServerIsRunning() {
+        final boolean running = jettyContainer.isControlServerRunning();
+        assertNotNull(running);
+        assertTrue(running);
+    }
+
 }

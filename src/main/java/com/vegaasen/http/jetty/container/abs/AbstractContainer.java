@@ -1,5 +1,7 @@
-package com.vegaasen.http.jetty.container;
+package com.vegaasen.http.jetty.container.abs;
 
+import com.vegaasen.http.jetty.container.Container;
+import com.vegaasen.http.jetty.container.ContainerDefaults;
 import com.vegaasen.http.jetty.container.servlet.IControlServlet;
 import com.vegaasen.http.jetty.model.JettyArguments;
 import com.vegaasen.http.jetty.model.User;
@@ -15,6 +17,8 @@ import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.server.handler.HandlerCollection;
 import org.eclipse.jetty.util.security.Constraint;
 import org.eclipse.jetty.util.security.Credential;
+import org.eclipse.jetty.webapp.WebAppClassLoader;
+import org.eclipse.jetty.webapp.WebAppContext;
 
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -125,6 +129,36 @@ public abstract class AbstractContainer implements Container {
             }
         }
         return collection;
+    }
+
+    public void startControlServer(final JettyArguments arguments) throws Exception {
+        if (arguments == null || arguments.getControlServlet() == null) {
+            return;
+        }
+        controlServer = new Server();
+        final ServerConnector httpControlConnector = new ServerConnector(controlServer);
+        httpControlConnector.setPort(
+                arguments.getControlServlet().getHttpControlPort() > 0 ?
+                        arguments.getControlServlet().getHttpControlPort() :
+                        ContainerDefaults.DEFAULT_CONTROL_PORT);
+        controlServer.addConnector(httpControlConnector);
+        final WebAppContext webAppContext = new WebAppContext();
+        webAppContext.setClassLoader(new WebAppClassLoader(webAppContext));
+        webAppContext.setContextPath(ContainerDefaults.DEFAULT_CONTROL_PATH);
+        webAppContext.addServlet(
+                arguments.getControlServlet().getControlClazz() == null ?
+                        ControlServlet.class :
+                        arguments.getControlServlet().getControlClazz(),
+                arguments.getControlServlet().getControlPath() != null ||
+                        !arguments.getControlServlet().getControlPath().isEmpty() ?
+                        arguments.getControlServlet().getControlPath() :
+                        ContainerDefaults.DEFAULT_PATH);
+        controlServer.setHandler(webAppContext);
+        controlServer.start();
+    }
+
+    public boolean isControlServerRunning() {
+        return controlServer != null && controlServer.isStarted() && controlServer.isRunning();
     }
 
     public final class ControlServlet extends HttpServlet implements IControlServlet, Serializable {

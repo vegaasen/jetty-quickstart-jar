@@ -1,8 +1,11 @@
 package com.vegaasen.http.jetty.model;
 
+import com.vegaasen.http.jetty.container.ContainerDefaults;
 import com.vegaasen.http.jetty.container.servlet.IControlServlet;
 
-import static com.vegaasen.http.jetty.container.ContainerProperties.DEFAULT_CONTROL_PORT;
+import javax.servlet.http.HttpServlet;
+
+import static com.vegaasen.http.jetty.container.ContainerDefaults.DEFAULT_CONTROL_PORT;
 
 /**
  * @author <a href="vegard.aasen@gmail.com">vegardaasen</a>
@@ -10,7 +13,8 @@ import static com.vegaasen.http.jetty.container.ContainerProperties.DEFAULT_CONT
 public final class ControlServlet {
 
     private int httpControlPort = DEFAULT_CONTROL_PORT;
-    private IControlServlet controlServlet;
+    private String controlPath = ContainerDefaults.DEFAULT_CONTROL_PATH;
+    private Class<HttpServlet> controlClazz = null;
 
     public int getHttpControlPort() {
         return httpControlPort;
@@ -20,11 +24,19 @@ public final class ControlServlet {
         this.httpControlPort = httpControlPort;
     }
 
-    public IControlServlet getControlServlet() {
-        return controlServlet;
+    public String getControlPath() {
+        return controlPath;
     }
 
-    public void setControlServlet(IControlServlet controlServlet) {
-        this.controlServlet = controlServlet;
+    public void setControlPath(String controlPath) {
+        this.controlPath = controlPath;
+    }
+
+    public Class<HttpServlet> getControlClazz() {
+        return controlClazz;
+    }
+
+    public void setControlClazz(Class<HttpServlet> controlClazz) {
+        this.controlClazz = controlClazz;
     }
 }

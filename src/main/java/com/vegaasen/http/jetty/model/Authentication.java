@@ -2,7 +2,7 @@ package com.vegaasen.http.jetty.model;
 
 import java.util.Arrays;
 
-import static com.vegaasen.http.jetty.container.ContainerProperties.*;
+import static com.vegaasen.http.jetty.container.ContainerDefaults.*;
 
 /**
  * @author <a href="vegard.aasen@gmail.com">vegardaasen</a>

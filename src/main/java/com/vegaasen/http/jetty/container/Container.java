@@ -8,7 +8,7 @@ import javax.servlet.http.HttpServlet;
 /**
  * @author <a href="vegard.aasen@gmail.com">vegardaasen</a>
  */
-interface Container {
+public interface Container {
 
     public Server getServer();
 

@@ -5,12 +5,13 @@ import com.vegaasen.http.jetty.model.User;
 /**
  * @author <a href="vegard.aasen@gmail.com">vegardaasen</a>
  */
-public final class ContainerProperties {
+public final class ContainerDefaults {
 
     public static final String[] JETTY_USER_ROLES = new String[]{"user"};
     public static final String[] JETTY_PROTOCOLS = new String[]{"http/1.1"};
     public static final String DEFAULT_PATH = "/";
-    public static final String DEFAULT_CONTEXT_PATH =  DEFAULT_PATH + "jetty";
+    public static final String DEFAULT_CONTEXT_PATH = DEFAULT_PATH + "jetty";
+    public static final String DEFAULT_CONTROL_PATH = "/control/";
     public static final String DEFAULT_WEBAPP_RESOURCE = "/webapp/";
     public static final char SERVLET_MATCHER = '*';
     public static final int DEFAULT_PORT = 7000;

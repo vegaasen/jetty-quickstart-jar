@@ -1,6 +1,6 @@
 package com.vegaasen.http.jetty.container.variant;
 
-import com.vegaasen.http.jetty.container.ContainerProperties;
+import com.vegaasen.http.jetty.container.ContainerDefaults;
 import com.vegaasen.http.jetty.container.variant.abs.JettyContainerAbstractTest;
 import com.vegaasen.http.jetty.jersey.rest.controller.TestController;
 import com.vegaasen.http.jetty.storage.SimpleStorage;
@@ -42,7 +42,7 @@ public final class JettyContainerWithJerseyTest extends JettyContainerAbstractTe
         jettyContainer.startServer(arguments);
         assertIsRunning();
         String result = TestUtils.stringFromInputStream(
-                TestUtils.streamFromHttpPort(ContainerProperties.DEFAULT_PORT, "/test/simple")
+                TestUtils.streamFromHttpPort(ContainerDefaults.DEFAULT_PORT, "/test/simple")
         );
         assertNotNull(result);
         assertFalse(result.isEmpty());
@@ -55,7 +55,7 @@ public final class JettyContainerWithJerseyTest extends JettyContainerAbstractTe
         assertIsRunning();
         String result = TestUtils.stringFromInputStream(
                 TestUtils.streamFromHttpPort(
-                        ContainerProperties.DEFAULT_PORT,
+                        ContainerDefaults.DEFAULT_PORT,
                         "/test/simpleWithParams/123456?ping=pong")
         );
         assertNotNull(result);
@@ -71,7 +71,7 @@ public final class JettyContainerWithJerseyTest extends JettyContainerAbstractTe
         final String thing = "stufftostoresomething";
         String result = TestUtils.stringFromInputStream(
                 TestUtils.streamFromHttpPort(
-                        ContainerProperties.DEFAULT_PORT,
+                        ContainerDefaults.DEFAULT_PORT,
                         String.format("/test/simplePostWithParams?thing=%s", thing),
                         false,
                         true)
@@ -92,7 +92,7 @@ public final class JettyContainerWithJerseyTest extends JettyContainerAbstractTe
         jettyContainer.startServer(arguments);
         assertIsRunning();
         String result = TestUtils.stringFromInputStream(
-                TestUtils.streamFromHttpPort(ContainerProperties.DEFAULT_PORT, "/test/simpleThatProducesJson")
+                TestUtils.streamFromHttpPort(ContainerDefaults.DEFAULT_PORT, "/test/simpleThatProducesJson")
         );
         assertNotNull(result);
         assertFalse(result.isEmpty());
@@ -106,7 +106,7 @@ public final class JettyContainerWithJerseyTest extends JettyContainerAbstractTe
         jettyContainer.startServer(arguments);
         assertIsRunning();
         String result = TestUtils.stringFromInputStream(
-                TestUtils.streamFromHttpPort(ContainerProperties.DEFAULT_PORT, "/test/simpleThatProducesXml")
+                TestUtils.streamFromHttpPort(ContainerDefaults.DEFAULT_PORT, "/test/simpleThatProducesXml")
         );
         assertNotNull(result);
         assertFalse(result.isEmpty());
