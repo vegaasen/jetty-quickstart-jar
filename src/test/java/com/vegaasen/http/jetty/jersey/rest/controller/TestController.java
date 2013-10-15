@@ -1,14 +1,12 @@
 package com.vegaasen.http.jetty.jersey.rest.controller;
 
-import com.vegaasen.http.jetty.jersey.rest.model.Thing;
-import com.vegaasen.http.jetty.jersey.rest.model.Things;
-import com.vegaasen.http.jetty.jersey.rest.storage.SimpleStorage;
+import com.vegaasen.http.jetty.storage.SimpleStorage;
+import com.vegaasen.http.jetty.utils.PatheticRandomUtils;
 
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import java.util.Date;
-import java.util.UUID;
 
 /**
  * Just an small test controller using standard jersey
@@ -58,37 +56,14 @@ public final class TestController {
     @Path("simpleThatProducesJson")
     @Produces(MediaType.APPLICATION_JSON)
     public Response simpleThatProducesJson() {
-        return Response.ok().entity(getSomeRandomThings()).build();
+        return Response.ok().entity(PatheticRandomUtils.getSomeRandomThings()).build();
     }
 
     @GET
     @Path("simpleThatProducesXml")
     @Produces(MediaType.APPLICATION_XML)
     public Response simpleThatProducesXml() {
-        return Response.ok().entity(getSomeRandomThings()).build();
-    }
-
-    private static Things getSomeRandomThings() {
-        Things rndThings = new Things();
-        rndThings.setId(Long.parseLong(someNumber()));
-        int c = 0;
-        for (; ; ) {
-            rndThings.addThing(
-                    new Thing.Builder()
-                            .id(someNumber())
-                            .name(UUID.randomUUID().toString())
-                            .build());
-            if (c != 10) {
-                c++;
-            } else {
-                break;
-            }
-        }
-        return rndThings;
-    }
-
-    private static String someNumber() {
-        return Integer.toString(5 + (int) (Math.random() * ((10 - 5) + 1)));
+        return Response.ok().entity(PatheticRandomUtils.getSomeRandomThings()).build();
     }
 
 }

@@ -12,6 +12,7 @@ public final class ContainerProperties {
     public static final String DEFAULT_PATH = "/";
     public static final String DEFAULT_CONTEXT_PATH =  DEFAULT_PATH + "jetty";
     public static final String DEFAULT_WEBAPP_RESOURCE = "/webapp/";
+    public static final char SERVLET_MATCHER = '*';
     public static final int DEFAULT_PORT = 7000;
     public static final int DEFAULT_CONTROL_PORT = DEFAULT_PORT + 1;
     public static final int DEFAULT_HTTPS_PORT = DEFAULT_PORT + 443;

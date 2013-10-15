@@ -1,7 +1,12 @@
 package com.vegaasen.http.jetty.model;
 
 import org.eclipse.jetty.server.Handler;
+import org.eclipse.jetty.server.handler.ErrorHandler;
+import org.eclipse.jetty.server.session.SessionHandler;
+import org.eclipse.jetty.servlet.ErrorPageErrorHandler;
+import org.eclipse.jetty.servlet.ServletHolder;
 
+import javax.servlet.ServletRequestListener;
 import java.util.*;
 
 import static com.vegaasen.http.jetty.container.ContainerProperties.*;
@@ -21,6 +26,10 @@ public final class JettyArguments {
     private Authentication authentication;
     private Map<String, String> initProperties = new HashMap<String, String>();
     private List<Handler> handlers = new ArrayList<Handler>();
+    private SessionHandler sessionHandler = new SessionHandler();
+    private ErrorHandler errorHandler = new ErrorPageErrorHandler();
+    private List<EventListener> requestListeners = new ArrayList<EventListener>();
+    private List<ServletHolder> servlets = new ArrayList<ServletHolder>();
 
     public JettyArguments() {
     }
@@ -109,6 +118,38 @@ public final class JettyArguments {
         handlers.add(handler);
     }
 
+    public List<EventListener> getRequestListeners() {
+        return requestListeners;
+    }
+
+    public void addRequestListener(final EventListener requestListener) {
+        requestListeners.add(requestListener);
+    }
+
+    public ErrorHandler getErrorHandler() {
+        return errorHandler;
+    }
+
+    public void setErrorHandler(ErrorHandler errorHandler) {
+        this.errorHandler = errorHandler;
+    }
+
+    public SessionHandler getSessionHandler() {
+        return sessionHandler;
+    }
+
+    public void setSessionHandler(SessionHandler sessionHandler) {
+        this.sessionHandler = sessionHandler;
+    }
+
+    public List<ServletHolder> getServlets() {
+        return servlets;
+    }
+
+    public void addServlet(final ServletHolder holder) {
+        servlets.add(holder);
+    }
+
     public String printRequestableUrls() {
         StringBuilder builder = new StringBuilder();
         builder.append("http://localhost:").append(getHttpPort()).append(getContextPath());
@@ -128,6 +169,13 @@ public final class JettyArguments {
                 ", httpPort=" + httpPort +
                 ", webAppResourceFolder='" + webAppResourceFolder + '\'' +
                 ", httpsConfiguration=" + httpsConfiguration +
+                ", authentication=" + authentication +
+                ", initProperties=" + initProperties +
+                ", handlers=" + handlers +
+                ", sessionHandler=" + sessionHandler +
+                ", errorHandler=" + errorHandler +
+                ", requestListeners=" + requestListeners +
+                ", servlets=" + servlets +
                 '}';
     }
 }

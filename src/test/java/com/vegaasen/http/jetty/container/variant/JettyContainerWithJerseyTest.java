@@ -3,8 +3,9 @@ package com.vegaasen.http.jetty.container.variant;
 import com.vegaasen.http.jetty.container.ContainerProperties;
 import com.vegaasen.http.jetty.container.variant.abs.JettyContainerAbstractTest;
 import com.vegaasen.http.jetty.jersey.rest.controller.TestController;
-import com.vegaasen.http.jetty.jersey.rest.storage.SimpleStorage;
+import com.vegaasen.http.jetty.storage.SimpleStorage;
 import com.vegaasen.http.jetty.model.JettyArguments;
+import com.vegaasen.http.jetty.storage.model.Thing;
 import com.vegaasen.http.jetty.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -77,10 +78,13 @@ public final class JettyContainerWithJerseyTest extends JettyContainerAbstractTe
         );
         assertNotNull(result);
         assertFalse(result.isEmpty());
-        String stuffJerseySays = SimpleStorage.INSTANCE.getThingByTimestamp(Long.parseLong(result));
+        Thing stuffJerseySays = SimpleStorage.INSTANCE.getThingByTimestamp(Long.parseLong(result));
         assertNotNull(stuffJerseySays);
-        assertFalse(stuffJerseySays.isEmpty());
-        assertEquals(thing, stuffJerseySays);
+        assertNotNull(stuffJerseySays.getId());
+        assertFalse(stuffJerseySays.getId().isEmpty());
+        assertNotNull(stuffJerseySays.getName());
+        assertFalse(stuffJerseySays.getName().isEmpty());
+        assertEquals(thing, stuffJerseySays.getName());
     }
 
     @Test

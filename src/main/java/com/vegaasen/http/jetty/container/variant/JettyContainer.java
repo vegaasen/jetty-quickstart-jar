@@ -1,17 +1,20 @@
 package com.vegaasen.http.jetty.container.variant;
 
 import com.vegaasen.http.jetty.container.AbstractContainer;
+import com.vegaasen.http.jetty.container.ContainerProperties;
 import com.vegaasen.http.jetty.model.JettyArguments;
 import com.vegaasen.http.jetty.utils.Validator;
 import org.eclipse.jetty.security.ConstraintSecurityHandler;
 import org.eclipse.jetty.server.Handler;
 import org.eclipse.jetty.server.Server;
+import org.eclipse.jetty.servlet.ServletHolder;
 import org.eclipse.jetty.util.resource.Resource;
 import org.eclipse.jetty.webapp.WebAppClassLoader;
 import org.eclipse.jetty.webapp.WebAppContext;
 
 import javax.servlet.http.HttpServlet;
 import java.io.Serializable;
+import java.util.EventListener;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -60,6 +63,25 @@ public final class JettyContainer extends AbstractContainer implements Serializa
                 webAppContext.setSecurityHandler(basicAuth);
             }
             args.addHandler(webAppContext);
+            webAppContext.setSessionHandler(args.getSessionHandler());
+            webAppContext.setErrorHandler(args.getErrorHandler());
+            if (args.getRequestListeners() != null && !args.getRequestListeners().isEmpty()) {
+                LOG.info("Found request listners. Adding to the context.");
+                for (EventListener listener : args.getRequestListeners()) {
+                    webAppContext.addEventListener(listener);
+                }
+            }
+            if (args.getServlets() != null && !args.getServlets().isEmpty()) {
+                LOG.info("Found servlets. Adding to the context.");
+                for (ServletHolder servlet : args.getServlets()) {
+                    webAppContext.addServlet(
+                            servlet,
+                            (args.getContextPath().endsWith(Character.toString(ContainerProperties.SERVLET_MATCHER)) ?
+                                    args.getContextPath() :
+                                    args.getContextPath() + ContainerProperties.SERVLET_MATCHER)
+                    );
+                }
+            }
             webServer.setHandler(assembleHandlers(args.getHandlers().toArray(new Handler[args.getHandlers().size()])));
             webServer.start();
             LOG.info(String.format("Jetty now started and available on: {%s}", args.printRequestableUrls()));

@@ -1,4 +1,4 @@
-package com.vegaasen.http.jetty.jersey.rest.model;
+package com.vegaasen.http.jetty.storage.model;
 
 import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlRootElement;
@@ -15,6 +15,10 @@ public final class Things {
     public List<Thing> things = new ArrayList<Thing>();
 
     public Things() {
+    }
+
+    public Things(long id) {
+        this.id = id;
     }
 
     @XmlElement(name = "id")

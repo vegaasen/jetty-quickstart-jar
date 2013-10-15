@@ -1,4 +1,4 @@
-package com.vegaasen.http.jetty.jersey.rest.model;
+package com.vegaasen.http.jetty.storage.model;
 
 import javax.xml.bind.annotation.XmlAttribute;
 import javax.xml.bind.annotation.XmlElement;

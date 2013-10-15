@@ -19,7 +19,7 @@ public abstract class JettyContainerAbstractTest {
         System.out.println("Server stopped.");
     }
 
-    public void assertIsRunning() {
+    protected void assertIsRunning() {
         final boolean running = jettyContainer.isRunning();
         assertNotNull(running);
         assertTrue(running);
