@@ -27,8 +27,8 @@ public final class JettyContainerWithJerseyTest extends JettyContainerAbstractTe
         arguments.setWebAppResourceFolder("jerseywebapp");
         arguments.setContextPath("/");
         arguments.setRootPath("/");
+        arguments.setControlServlet(null);
         jettyContainer = new JettyContainer();
-        SimpleStorage.INSTANCE.clearAllThings();
     }
 
     @Test

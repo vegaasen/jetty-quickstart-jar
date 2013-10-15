@@ -27,6 +27,7 @@ public final class JettyContainerTest extends JettyContainerAbstractTest {
     @Before
     public void setUp() throws Exception {
         arguments = new JettyArguments();
+        arguments.setControlServlet(null);
         jettyContainer = new JettyContainer();
     }
 

@@ -1,6 +1,7 @@
 package com.vegaasen.http.jetty.container.variant.abs;
 
 import com.vegaasen.http.jetty.container.variant.JettyContainer;
+import com.vegaasen.http.jetty.storage.SimpleStorage;
 import org.junit.After;
 
 import static org.junit.Assert.assertNotNull;
@@ -16,7 +17,9 @@ public abstract class JettyContainerAbstractTest {
     @After
     public void tearDown() throws Exception {
         jettyContainer.stopServer();
+        jettyContainer.stopControlServer();
         System.out.println("Server stopped.");
+        SimpleStorage.INSTANCE.clearAllThings();
     }
 
     protected void assertIsRunning() {

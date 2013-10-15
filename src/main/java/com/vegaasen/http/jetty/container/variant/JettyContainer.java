@@ -82,9 +82,9 @@ public final class JettyContainer extends AbstractContainer implements Serializa
                     );
                 }
             }
-            if(args.getControlServlet()!=null) {
+            if (args.getControlServlet() != null) {
                 startControlServer(args);
-            }else{
+            } else {
                 LOG.warning("No control servlet detected. Might be that stuff will not be able to be killed correctly.");
             }
             webServer.setHandler(assembleHandlers(args.getHandlers().toArray(new Handler[args.getHandlers().size()])));
@@ -123,6 +123,7 @@ public final class JettyContainer extends AbstractContainer implements Serializa
             }
             LOG.info("WebServer has been shut down.");
         }
+        LOG.warning("Shutdown executed, however there was no server running.");
     }
 
     @Override

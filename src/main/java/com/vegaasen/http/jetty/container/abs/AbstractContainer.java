@@ -157,6 +157,20 @@ public abstract class AbstractContainer implements Container {
         controlServer.start();
     }
 
+    public void stopControlServer() {
+        if (controlServer != null) {
+            try {
+                while (controlServer.isRunning()) {
+                    controlServer.stop();
+                }
+            } catch (Exception e) {
+                controlServer.destroy();
+            } finally {
+                controlServer = null;
+            }
+        }
+    }
+
     public boolean isControlServerRunning() {
         return controlServer != null && controlServer.isStarted() && controlServer.isRunning();
     }

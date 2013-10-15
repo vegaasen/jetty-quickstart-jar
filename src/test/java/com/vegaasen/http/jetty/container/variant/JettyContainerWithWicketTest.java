@@ -25,12 +25,13 @@ public class JettyContainerWithWicketTest extends JettyContainerAbstractTest {
     @Before
     public void setUp() {
         arguments = new JettyArguments();
-        jettyContainer = new JettyContainer();
         arguments.setWebAppResourceFolder("wicketwebapp");
         arguments.setContextPath("/");
         arguments.setRootPath("/");
         arguments.addInitProperty("configuration", "deployment");
         arguments.setHttpPort(WICKET_HTTP_PORT);
+        arguments.setControlServlet(null);
+        jettyContainer = new JettyContainer();
     }
 
     @Test

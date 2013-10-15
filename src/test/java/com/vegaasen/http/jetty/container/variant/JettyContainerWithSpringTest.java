@@ -3,7 +3,6 @@ package com.vegaasen.http.jetty.container.variant;
 import com.vegaasen.http.jetty.container.variant.abs.JettyContainerAbstractTest;
 import com.vegaasen.http.jetty.model.JettyArguments;
 import com.vegaasen.http.jetty.spring.rest.controller.TestController;
-import com.vegaasen.http.jetty.storage.SimpleStorage;
 import com.vegaasen.http.jetty.utils.TestUtils;
 import org.junit.Before;
 import org.junit.Test;
@@ -35,7 +34,7 @@ public final class JettyContainerWithSpringTest extends JettyContainerAbstractTe
         arguments.addRequestListener(new ContextLoaderListener());
         arguments.addServlet(TestUtils.getSpringServletHolder());
         arguments.setHttpPort(SPRING_HTTP_PORT);
-        SimpleStorage.INSTANCE.clearAllThings();
+        arguments.setControlServlet(null);
     }
 
     @Test
