@@ -28,7 +28,9 @@ public final class Validator {
         String resourcePath = arguments.getWebAppResourceFolder();
         resourcePath = (resourcePath.startsWith("/") ? resourcePath : "/" + resourcePath);
         if (Validator.class.getResource(resourcePath) == null) {
-            throw new IllegalArgumentException("Resource-folder does not exists.");
+            throw new IllegalArgumentException(
+                    String.format("Expected resource-folder does not exists. Missing <%s> folder?", resourcePath)
+            );
         }
     }
 

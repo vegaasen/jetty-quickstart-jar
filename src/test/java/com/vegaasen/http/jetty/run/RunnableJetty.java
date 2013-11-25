@@ -15,7 +15,7 @@ import org.springframework.web.context.request.RequestContextListener;
 public final class RunnableJetty {
 
     public static void main(String... args) {
-        jersey();
+        wicket();
     }
 
     private static void wicket() {
